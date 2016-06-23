@@ -8,7 +8,7 @@
 #' @seealso \code{\link{plot.trackeRdataSummary}}
 #' @references Bohannon RW (1997). "Comfortable and Maximum Walking Speed of Adults Aged 20--79 Years: Reference Values and Determinants." Age and Ageing, 26(1), 15--19. doi: 10.1093/ageing/26.1.15.
 #' @examples
-#' data(runs, package = "trackeR")
+#' data("runs", package = "trackeR")
 #' runSummary <- summary(runs, session = 1:2)
 #' ## print summary
 #' runSummary
@@ -55,7 +55,7 @@ summary.trackeRdata <- function(object, session = NULL, movingThreshold = NULL, 
     } else {
         units <- rbind(units, c("duration", durUnit))
     }
-    
+
     ## moving time (based on speed)
     durationMoving <- sapply(object, function(x) timeAboveThreshold(x$speed, threshold = movingThreshold, ge = FALSE))
     attr(durationMoving, "units") <- "secs"
@@ -142,13 +142,13 @@ summary.trackeRdata <- function(object, session = NULL, movingThreshold = NULL, 
 
 
     ret <- data.frame(session = session, sessionStart = sessionStart, sessionEnd = sessionEnd,
-                      distance = distance, duration = duration, durationMoving = durationMoving, 
+                      distance = distance, duration = duration, durationMoving = durationMoving,
                       avgSpeed = avgSpeed, avgSpeedMoving = avgSpeedMoving,
                       avgPace = avgPace, avgPaceMoving = avgPaceMoving,
                       avgCadence = avgCadence, avgCadenceMoving = avgCadenceMoving,
                       avgPower = avgPower, avgPowerMoving = avgPowerMoving,
                       avgHeartRate = avgHeartRate, avgHeartRateMoving = avgHeartRateMoving,
-                      avgHeartRateResting = avgHeartRateResting, 
+                      avgHeartRateResting = avgHeartRateResting,
                       wrRatio = wrRatio)
 
     attr(ret, "units") <- units
@@ -265,19 +265,19 @@ fortify.trackeRdataSummary <- function(model, data, melt = FALSE, ...){
         varsMoving <- c("duration", "avgSpeed", "avgPace", "avgCadence", "avgPower", "avgHeartRate")
         varsResting <- c("avgHeartRate")
 
-        dfTotal <- data.frame(basic[rep(ret$session, times = length(varsTotal)),],
+        dfTotal <- data.frame(basic[rep(seq_along(ret$session), times = length(varsTotal)),],
                               variable = rep(varsTotal, each = nrow(ret)),
                               value = unlist(ret[, varsTotal]),
                               type = "total")
-        dfMoving <- data.frame(basic[rep(ret$session, times = length(varsMoving)),],
+        dfMoving <- data.frame(basic[rep(seq_along(ret$session), times = length(varsMoving)),],
                                variable = rep(varsMoving, each = nrow(ret)),
                                value = unlist(ret[, paste0(varsMoving, "Moving")]),
                                type = "moving")
-        dfResting <- data.frame(basic[rep(ret$session, times = length(varsResting)),],
+        dfResting <- data.frame(basic[rep(seq_along(ret$session), times = length(varsResting)),],
                                variable = rep(varsResting, each = nrow(ret)),
                                value = unlist(ret[, paste0(varsResting, "Resting")]),
                                type = "resting")
-        
+
         ret <- rbind(dfTotal, dfMoving, dfResting)
     }
     return(ret)
@@ -291,16 +291,17 @@ fortify.trackeRdataSummary <- function(model, data, melt = FALSE, ...){
 #' @param what Name of variables which should be plotted. Default is all.
 #' @param group Which group of variables should be plotted? This can either be
 #'     \code{total} or \code{moving}. Default is both.
+#' @param lines Should interpolating lines be plotted?
 #' @param ... Currently not used.
 #' @seealso \code{\link{summary.trackeRdata}}
 #' @examples
-#' data(runs, package = "trackeR")
+#' data("runs", package = "trackeR")
 #' runSummary <- summary(runs)
 #' plot(runSummary)
 #' plot(runSummary, date = FALSE, group = "total",
 #'     what = c("distance", "duration", "avgSpeed"))
 #' @export
-plot.trackeRdataSummary <- function(x, date = TRUE, what = NULL, group = NULL, ...){
+plot.trackeRdataSummary <- function(x, date = TRUE, what = NULL, group = NULL, lines = TRUE, ...){
     ## the following line is just intended to prevent R CMD check to produce the NOTE
     ## "no visible binding for global variable *" because those variables are used in subset()
     variable <- type <- NULL
@@ -344,23 +345,37 @@ plot.trackeRdataSummary <- function(x, date = TRUE, what = NULL, group = NULL, .
     ## (basic) plot
     p <- ggplot2::ggplot(dat)
     if (date & ndates < nsessions) stop("All sessions must have unique starting times. Try date = FALSE instead.")
-    p <- p + ggplot2::geom_point(ggplot2::aes_(x = quote(xaxis), y = quote(value), color = quote(type))) +
+    p <- p + ggplot2::geom_point(ggplot2::aes_(x = quote(xaxis), y = quote(value), color = quote(type)),
+                                 na.rm = TRUE) +
         ggplot2::labs(x = xlab, y = "") +
         ggplot2::guides(color = ggplot2::guide_legend(title = "Type"))
-    if (nsessions > 1)
-        p <- p + ggplot2::geom_line(ggplot2::aes_(x = quote(xaxis), y = quote(value), color = quote(type))) +
-        ggplot2::guides(color = ggplot2::guide_legend(title = "Type"))
+    if (nsessions > 1) {
+        if (lines) {
+            p <- p + ggplot2::geom_line(ggplot2::aes_(x = quote(xaxis), y = quote(value), color = quote(type)),
+                                        na.rm = TRUE)
+        }
+        p <- p + ggplot2::guides(color = ggplot2::guide_legend(title = "Type"))
+    }
 
     ## facets
     lab_sum <- function(series){
         series <- as.character(series)
-        if (series == "wrRatio") return("wrRatio")
         concept <- switch(series, avgPace = "pace", avgSpeed = "speed",
                           distance = "distance", duration = "duration",
                           avgPower = "power", avgCadence = "cadence", avgHeartRate = "heart.rate")
         thisunit <- units$unit[units$variable == concept]
         prettyUnit <- prettifyUnits(thisunit)
-        paste0(series, " [", prettyUnit,"]")
+        ret <- switch(series,
+                      distance = paste0("distance \n [", prettyUnit,"]"),
+                      duration = paste0("duration \n [", prettyUnit,"]"),
+                      avgSpeed = paste0("avg. speed \n [", prettyUnit,"]"),
+                      avgPace = paste0("avg. pace \n [", prettyUnit,"]"),
+                      avgCadence = paste0("avg. cadence \n [", prettyUnit,"]"),
+                      avgPower = paste0("avg. power \n [", prettyUnit,"]"),
+                      avgHeartRate = paste0("avg. heart rate \n [", prettyUnit,"]"),
+                      wrRatio = "work-to-rest \n ratio"
+                      )
+        ret
     }
     lab_sum <- Vectorize(lab_sum)
 
@@ -369,10 +384,36 @@ plot.trackeRdataSummary <- function(x, date = TRUE, what = NULL, group = NULL, .
         ggplot2::theme(legend.position = "top")
 
     ## add bw theme
-    p <- p + ggplot2::theme_bw()
+    p <- p + ggplot2::theme_bw() + ggplot2::theme(legend.position = "top")
 
     return(p)
 }
+
+#' @export
+timeline.trackeRdataSummary <- function(object, lims = NULL, ...) {
+    startdates <- as.Date(object$sessionStart)
+    enddates <- as.Date(object$sessionEnd)
+    ## Hack to extract times
+    endtimes <- object$sessionEnd
+    starttimes <- object$sessionStart
+    endtimes <- as.POSIXct(as.numeric(difftime(endtimes, trunc(endtimes, "days"), units = "secs")), origin = Sys.Date())
+    starttimes <- as.POSIXct(as.numeric(difftime(starttimes, trunc(starttimes, "days"), units = "secs")), origin = Sys.Date())
+    df <- data.frame(sday = startdates,
+                     eday = enddates,
+                     start = starttimes,
+                     end = endtimes)
+    if (!is.null(lims)) {
+        lims <- as.POSIXct(paste(Sys.Date(), lims))
+    }
+    p <- ggplot2::ggplot(df) +
+        ## geom_point(aes(x = start, y = sday), alpha = 0.5) + geom_point(aes(x = end, y = eday), alpha = 0.5) +
+        ggplot2::geom_segment(ggplot2::aes_(x = quote(start), xend = quote(end), y = quote(sday), yend = quote(eday)), alpha = 0.5)
+    ## take care of breaks, limits on the time axes and style of breakpoints
+    p <- p + ggplot2::scale_x_datetime(date_labels = "%H:%m", date_breaks = "4 hour", limits = lims)
+    p <- p + ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 50, hjust = 1)) + ggplot2::xlab("Time") + ggplot2::ylab("Date")
+    p + ggplot2::theme_bw()
+}
+
 
 #' @export
 "[.trackeRdataSummary" <- function(x, i, j, drop = TRUE, ...){
@@ -383,4 +424,9 @@ plot.trackeRdataSummary <- function(x, date = TRUE, what = NULL, group = NULL, .
     attr(ret, "units") <- units
     class(ret) <- c("trackeRdataSummary", class(ret))
     return(ret)
+}
+
+#' @export
+nsessions.trackeRdataSummary <- function(object, ...) {
+    length(object)
 }

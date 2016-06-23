@@ -5,12 +5,13 @@
 \title{Plot routes for training sessions.}
 \usage{
 plotRoute(x, session = 1, zoom = NULL, speed = TRUE, threshold = TRUE,
-  ...)
+  mfrow = NULL, ...)
 }
 \arguments{
 \item{x}{A object of class \code{\link{trackeRdata}}.}
 
-\item{session}{The session to be plotted.}
+\item{session}{A numeric vector of the sessions to be plotted. Defaults
+to the first session, all sessions can be plotted by \code{session = NULL}.}
 
 \item{zoom}{The zoom level for the background map as passed on to
 \code{\link[ggmap]{get_map}} (2 corresponds roughly to continent
@@ -19,6 +20,9 @@ level and 20 to building level).}
 \item{speed}{Logical. Should the trace be colored according to speed?}
 
 \item{threshold}{Logical. Should thresholds be applied?}
+
+\item{mfrow}{A vector of 2 elements, number of rows and number of columns,
+specifying the layout for multiple sessions.}
 
 \item{...}{Additional arguments passed on to \code{\link{threshold}} and
 \code{\link[ggmap]{get_map}}, e.g., \code{source} and \code{maptype}.}
@@ -29,10 +33,14 @@ Internet connection is required to download the background map.
 }
 \examples{
 \dontrun{
-data(runs, package = "trackeR")
+data("runs", package = "trackeR")
 plotRoute(runs, session = 4, zoom = 13)
 plotRoute(runs, session = 4, zoom = 13, maptype = "hybrid")
 plotRoute(runs, session = 4, zoom = 13, source = "osm")
+## multiple sessions
+plotRoute(runs, session = c(1:5, 8:11), source = "osm")
+## different zoom level per panel
+plotRoute(runs, session = 6:7, source = "osm", zoom = c(13, 14))
 }
 }
 \seealso{

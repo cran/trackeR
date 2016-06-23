@@ -36,6 +36,14 @@ Wexp <- function(object, w0, cp,
     ind <- dp > 0
 
     wna <- is.na(power)
+    ## if all power values are NA, return NA
+    if (all(wna)) {
+        ret <- cbind(coredata(object), power)
+        colnames(ret) <- c("movement", "wprime")
+        ret <- zoo(ret, order.by = index(object))
+        return(ret)
+    }
+    ## otherwise carry on
     time <- time[!wna]
     power <- power[!wna]
     dp <- dp[!wna]
@@ -121,7 +129,7 @@ Wexp <- function(object, w0, cp,
 #' @export
 #' @examples
 #' data("runs", package = "trackeR")
-#' wexp <- Wprime(runs, session = 11:13, cp = 4, version = "2012")
+#' wexp <- Wprime(runs, session = c(11,13), cp = 4, version = "2012")
 #' plot(wexp)
 Wprime <- function(object, session = NULL, quantity = c("expended", "balance"),
                    w0, cp, version = c("2015", "2012"), meanRecoveryPower = FALSE,
@@ -269,7 +277,7 @@ plot.trackeRWprime <- function(x, session = NULL, dates = TRUE, scaled = TRUE, .
         p <- ggplot2::ggplot(data = df, mapping = ggplot2::aes_(x = quote(Index), y = quote(Value))) +
             ggplot2::ylab("") + ggplot2::xlab("Time")
         ## lines for power/speed and W'
-        p <- p + ggplot2::geom_line(ggplot2::aes_(group = quote(Series), col = quote(Series))) +
+        p <- p + ggplot2::geom_line(ggplot2::aes_(group = quote(Series), col = quote(Series)), na.rm = TRUE) +
             ggplot2::scale_colour_manual(name = "", labels = mylabels, values = c("gray","blue"))
         ## add line for cp
         p <- p + ggplot2::geom_hline(data = data.frame(cp = cp), ggplot2::aes(yintercept = cp), col = "black")
@@ -279,14 +287,15 @@ plot.trackeRWprime <- function(x, session = NULL, dates = TRUE, scaled = TRUE, .
                              mapping = ggplot2::aes_(x = quote(Index), y = quote(Value))) +
             ggplot2::ylab(paste("W'", quantity, Wunit)) + ggplot2::xlab("Time")
         ## lines for W'
-        p <- p + ggplot2::geom_line()        
+        p <- p + ggplot2::geom_line(na.rm = TRUE)
     }
     ## add facet if necessary
     if (!is.null(facets)){
         p <- p + ggplot2::facet_grid(facets, scales = "free")
     }
     ## add bw theme
-    p <- p + ggplot2::theme_bw() + ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 50, hjust = 1))
+    p <- p + ggplot2::theme_bw() + ggplot2::theme(legend.position = "top",
+        axis.text.x = ggplot2::element_text(angle = 50, hjust = 1))
 
     return(p)
 }

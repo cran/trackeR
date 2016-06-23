@@ -5,7 +5,7 @@
 \title{Plot an object of class trackeRdataSummary.}
 \usage{
 \method{plot}{trackeRdataSummary}(x, date = TRUE, what = NULL,
-  group = NULL, ...)
+  group = NULL, lines = TRUE, ...)
 }
 \arguments{
 \item{x}{An object of class \code{trackeRdataSummary}.}
@@ -17,13 +17,15 @@
 \item{group}{Which group of variables should be plotted? This can either be
 \code{total} or \code{moving}. Default is both.}
 
+\item{lines}{Should interpolating lines be plotted?}
+
 \item{...}{Currently not used.}
 }
 \description{
 Plot an object of class trackeRdataSummary.
 }
 \examples{
-data(runs, package = "trackeR")
+data("runs", package = "trackeR")
 runSummary <- summary(runs)
 plot(runSummary)
 plot(runSummary, date = FALSE, group = "total",

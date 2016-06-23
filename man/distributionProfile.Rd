@@ -6,7 +6,7 @@
 \usage{
 distributionProfile(object, session = NULL, what = c("speed", "heart.rate"),
   grid = list(speed = seq(0, 12.5, by = 0.05), heart.rate = seq(0, 250)),
-  scaled = FALSE, parallel = FALSE, cores = NULL)
+  parallel = FALSE, cores = NULL)
 }
 \arguments{
 \item{object}{An object of class \code{\link{trackeRdata}}.}
@@ -17,11 +17,11 @@ distributionProfile(object, session = NULL, what = c("speed", "heart.rate"),
 
 \item{grid}{A named list containing the grid for the variables in \code{what}.}
 
-\item{scaled}{Logical. Should the distribution profiles be scaled relative to their maximum value?}
-
 \item{parallel}{Logical. Should computation be carried out in parallel?}
 
-\item{cores}{Number of cores for parallel computing. If NULL, the number of cores is set to the value of \code{options("corese")} (on Windows) or \code{options("mc.cores")} (elsewhere), or, if the relevant option is unspecified, to half the number of cores detected.}
+\item{cores}{Number of cores for parallel computing. If NULL, the number of cores is
+set to the value of \code{options("cores")} (on Windows) or \code{options("mc.cores")}
+(elsewhere), or, if the relevant option is unspecified, to half the number of cores detected.}
 }
 \value{
 An object of class \code{distrProfile}.
@@ -30,7 +30,7 @@ An object of class \code{distrProfile}.
 Generate training distribution profiles.
 }
 \examples{
-data(run, package = "trackeR")
+data("run", package = "trackeR")
 dProfile <- distributionProfile(run, what = "speed", grid = seq(0, 12.5, by = 0.05))
 plot(dProfile, smooth = FALSE)
 }

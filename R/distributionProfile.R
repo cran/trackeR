@@ -4,22 +4,23 @@
 #' @param session A numeric vector of the sessions to be used, defaults to all sessions.
 #' @param what The variables for which the distribution profiles should be generated.
 #' @param grid A named list containing the grid for the variables in \code{what}.
-#' @param scaled Logical. Should the distribution profiles be scaled relative to their maximum value?
 #' @param parallel Logical. Should computation be carried out in parallel?
-#' @param cores Number of cores for parallel computing. If NULL, the number of cores is set to the value of \code{options("corese")} (on Windows) or \code{options("mc.cores")} (elsewhere), or, if the relevant option is unspecified, to half the number of cores detected.
+#' @param cores Number of cores for parallel computing. If NULL, the number of cores is
+#'     set to the value of \code{options("cores")} (on Windows) or \code{options("mc.cores")}
+#'     (elsewhere), or, if the relevant option is unspecified, to half the number of cores detected.
 #' @return An object of class \code{distrProfile}.
 #' @references Kosmidis, I., and Passfield, L. (2015). Linking the Performance of
 #'     Endurance Runners to Training and Physiological Effects via Multi-Resolution
 #'     Elastic Net. \emph{ArXiv e-print} arXiv:1506.01388.
 #' @examples
-#' data(run, package = "trackeR")
+#' data("run", package = "trackeR")
 #' dProfile <- distributionProfile(run, what = "speed", grid = seq(0, 12.5, by = 0.05))
 #' plot(dProfile, smooth = FALSE)
 #' @export
 distributionProfile <- function(object, session = NULL, what = c("speed", "heart.rate"),
                                 grid = list(speed = seq(0, 12.5, by = 0.05), heart.rate = seq(0, 250)),
-                                scaled = FALSE, parallel = FALSE, cores = NULL){ 
-    
+                                parallel = FALSE, cores = NULL){
+
     units <- getUnits(object)
     if (is.null(session))
         session <- 1:length(object)
@@ -61,6 +62,8 @@ distributionProfile <- function(object, session = NULL, what = c("speed", "heart
         missing <- is.na(values)
         values <- values[!missing]
         timestamps <- timestamps[!missing]
+        ## Return NA if all values are missing
+        if (all(missing)) return(rep(NA, length(grid)))
         ## Calculate dp
         charOrder <- order(values)
         values <- values[charOrder]
@@ -70,9 +73,9 @@ distributionProfile <- function(object, session = NULL, what = c("speed", "heart
         out <- stats::approx(x = uniqueValues, y = cumsum(weights)/sum(weights), xout = grid,
                       method = "constant", yleft = 0, yright = 1, f = 0, ties = "ordered")$y
         ## Can be included for scaling
-        if (scaled)
-            1 - out
-        else
+        ## if (scaled)
+        ##     1 - out
+        ## else
         sum(weights)*(1 - out)
     }
 
@@ -84,7 +87,7 @@ distributionProfile <- function(object, session = NULL, what = c("speed", "heart
         dc <- parallel::detectCores()
         if (.Platform$OS.type != "windows"){
             if (is.null(cores))
-                cores <- getOption("mc.cores", max(floor(dc/2), 1L)) 
+                cores <- getOption("mc.cores", max(floor(dc/2), 1L))
             ## parallel::mclapply(...,  mc.cores = cores)
             for (i in what) {
                 times <- parallel::mclapply(object, function(sess) {
@@ -131,6 +134,45 @@ distributionProfile <- function(object, session = NULL, what = c("speed", "heart
     return(DP)
 }
 
+#' Scale the distribution profile relative to its maximum value
+#'
+#' @param object An object of class \code{distrProfile} as returned by \code{\link{distributionProfile}}.
+#' @param session A numeric vector of the sessions to be plotted, defaults to all sessions.
+#' @param what Which variables should be scaled?
+#' @param ... Currently not used.
+#' @export
+scaled.distrProfile <- function(object, session  = NULL, what = c("speed", "heart.rate"), ...){
+    operations <- getOperations(object)
+
+    ## select sessions
+    availSessions <- if (is.null(ncol(object[[1]]))) 1 else ncol(object[[1]])
+    if (is.null(session)) session <- 1:availSessions
+    for(i in seq_along(object)) object[[i]] <- object[[i]][,session]
+    #availSessions <- if (is.null(ncol(object[[1]]))) 1 else ncol(object[[1]])
+
+    ret <- list()
+    what <- unlist(what)[unlist(what) %in% names(object)]
+
+    for (i in what){
+        nc <- if (is.null(ncol(object[[1]]))) 1 else ncol(object[[1]])
+        cdat <- coredata(object[[i]])
+        scaledProfile <- sweep(cdat, 2, apply(cdat, 2, max), "/")
+        colnames(scaledProfile) <- attr(object[[i]], "dimnames")[[2]]
+        ret[[i]] <- zoo(scaledProfile, order.by = index(object[[i]]))
+    }
+
+    unscaled <- names(object)[!(names(object) %in% what)]
+    for (i in unscaled){
+        ret[[i]] <- object[[i]]
+    }
+
+    ## class and return
+    operations <- getOperations(object)
+    attr(ret, "operations") <- c(operations, list(scale = NULL))
+    attr(ret, "units") <- getUnits(object)
+    class(ret) <- "distrProfile"
+    return(ret)
+}
 
 
 #' Time spent above a certain threshold
@@ -193,7 +235,7 @@ fortify.distrProfile <- function(model, data, melt = FALSE, ...){
 #' @param smooth Logical. Should unsmoothed profiles be smoothed before plotting?
 #' @param ... Further arguments to be passed to \code{\link{smootherControl.distrProfile}}.
 #' @examples
-#' data(runs, package = "trackeR")
+#' data("runs", package = "trackeR")
 #' dProfile <- distributionProfile(runs, session = 1:2,
 #'     what = "speed", grid = seq(0, 12.5, by = 0.05))
 #' plot(dProfile, smooth = FALSE)
@@ -231,8 +273,12 @@ plot.distrProfile <- function(x, session = NULL, what = c("speed", "heart.rate")
     ## if (length(session) > 1L) df <- subset(df, Series %in% paste0("Session", session))
     ## df <- subset(df, Profile %in% what)
     ## HACK: If there is only one session (=series) to be plotted, give it a proper name for multiple = TRUE.
-    if (length(session) < 2) df$Series <- paste0("Session", session)
-    df$Series <- factor(df$Series)
+    if (length(session) < 2) {
+        df$Series <- session
+        ## df$Series <- factor(df$Series)
+    } else {
+        df$Series <- as.numeric(sapply(strsplit(as.character(df$Series), "Session"), function(x) x[2]))
+    }
     df$Profile <- factor(df$Profile)
 
     ## ## check that there is data to plot
@@ -254,12 +300,12 @@ plot.distrProfile <- function(x, session = NULL, what = c("speed", "heart.rate")
     if (multiple){
         p <- ggplot2::ggplot(data = df, mapping = ggplot2::aes_(x = quote(Index), y = quote(Value),
                                                                 group = quote(Series), color = quote(Series))) +
-            ggplot2::geom_line() + ggplot2::ylab("Time spent above threshold") +
+            ggplot2::geom_line(na.rm = TRUE) + ggplot2::ylab("Time spent above threshold") +
                 ggplot2::xlab(if(singleVariable) lab_data(levels(df$Profile)) else "")
         facets <- if(singleVariable) NULL else ". ~ Profile"
     } else {
         p <- ggplot2::ggplot(data = df, mapping = ggplot2::aes_(x = quote(Index), y = quote(Value))) +
-            ggplot2::geom_line() + ggplot2::ylab("Time spent above threshold") +
+            ggplot2::geom_line(na.rm = TRUE) + ggplot2::ylab("Time spent above threshold") +
                 ggplot2::xlab(if(singleVariable) lab_data(levels(df$Profile)) else "")
 
         facets <- if (singleVariable) {
@@ -275,7 +321,7 @@ plot.distrProfile <- function(x, session = NULL, what = c("speed", "heart.rate")
     }
 
     ## add bw theme
-    p <- p + ggplot2::theme_bw()
+    p <- p + ggplot2::theme_bw() + ggplot2::scale_colour_continuous(name = "Session")
 
     return(p)
 }
@@ -377,7 +423,7 @@ smoother.distrProfile <- function(object, session = NULL, control = list(...), .
             ## README: originally used order.by = dsm$x which is the same as arg x of decreasingSmoother if len = NULL.
         }
     }
-   
+
     ## FIXME: add unsmoothed distribution profiles?
     unsmoothed <- names(object)[!(names(object) %in% what)]
     for (i in unsmoothed){
@@ -436,9 +482,6 @@ smootherControl.distrProfile <- function(what = c("speed", "heart.rate"), k = 30
 #' @param fam A family object passed on to the \code{family} argument of \code{\link[scam]{scam}}.
 decreasingSmoother <- function(x, y, k = 30, len = NULL, sp = NULL,
                                fam = "poisson") {
-    dat <- data.frame(y = y, x = x)
-    scamFormula <- stats::as.formula(paste0("y ~ s(x, k = ", k, ", bs = 'mpd')"))
-    gamfit <- scam::scam(scamFormula, family = fam, sp = sp, data = dat)
     xmin <- min(x)
     xman <- max(x)
     if (is.null(len)) {
@@ -447,6 +490,11 @@ decreasingSmoother <- function(x, y, k = 30, len = NULL, sp = NULL,
     else {
         predictionRange <- seq(xmin, xman, length.out = len)
     }
+    if (all(is.na(y)))
+        return(list(x = predictionRange, y = rep(NA, length(predictionRange))))
+    dat <- data.frame(y = y, x = x)
+    scamFormula <- stats::as.formula(paste0("y ~ s(x, k = ", k, ", bs = 'mpd')"))
+    gamfit <- scam::scam(scamFormula, family = fam, sp = sp, data = dat)
     res <- list(x = predictionRange,
                 y = stats::predict(gamfit, type = "response",
                     newdata = data.frame(x = predictionRange)))
@@ -568,3 +616,7 @@ c.distrProfile <- function(..., recursive = FALSE){
 
 ## FIXME: implement [] method
 
+#' @export
+nsessions.distrProfile <- function(object, ...) {
+    if (is.null(ncol(object[[1]]))) 1 else ncol(object[[1]])
+}

@@ -6,29 +6,28 @@
 options(width = 70, prompt = "R> ", continue = "+  ")
 library("trackeR")
 library("ggplot2")
+data("runs", package = "trackeR")
 set.seed(403)
 cache <- FALSE
 
 
 ###################################################
-### code chunk number 2: trackeR.Rnw:1362-1367
+### code chunk number 2: trackeR.Rnw:1363-1367
 ###################################################
-filepath <- system.file("extdata", "2013-06-08-090442.TCX", package = "trackeR")
-## read raw data
+filepath <- system.file("extdata", "2013-06-08-090442.TCX", 
+  package = "trackeR")
 runDF <- readTCX(file = filepath, timezone = "GMT")
-## runDF is a data.frame with the following structure
 str(runDF)
 
 
 ###################################################
-### code chunk number 3: trackeR.Rnw:2014-2016
+### code chunk number 3: trackeR.Rnw:2014-2015
 ###################################################
-## turn the raw data in runDF into a trackeRdata object
 runTr0 <- trackeRdata(runDF)
 
 
 ###################################################
-### code chunk number 4: trackeR.Rnw:2024-2026
+### code chunk number 4: trackeR.Rnw:2023-2025
 ###################################################
 runTr1 <- readContainer(filepath, type = "tcx", timezone = "GMT")
 identical(runTr0, runTr1)
@@ -37,32 +36,33 @@ identical(runTr0, runTr1)
 ###################################################
 ### code chunk number 5: dataLoad
 ###################################################
-data(run, package = "trackeR")
-data(runs, package = "trackeR")
+data("run", package = "trackeR")
+data("runs", package = "trackeR")
 
 
 ###################################################
-### code chunk number 6: trackeR.Rnw:2067-2068 (eval = FALSE)
+### code chunk number 6: dataLoad0 (eval = FALSE)
+###################################################
+## data("run", package = "trackeR")
+## data("runs", package = "trackeR")
+
+
+###################################################
+### code chunk number 7: trackeR.Rnw:2073-2074 (eval = FALSE)
 ###################################################
 ## plot(runs, session = 1:3)
 
 
 ###################################################
-### code chunk number 7: defaultPlot
+### code chunk number 8: defaultPlot
 ###################################################
 plot(runs, session = 1:3)
 
 
 ###################################################
-### code chunk number 8: trackeR.Rnw:2092-2093 (eval = FALSE)
+### code chunk number 9: trackeR.Rnw:2098-2099 (eval = FALSE)
 ###################################################
 ## plotRoute(runs, session = 4, zoom = 13, source = "osm")
-
-
-###################################################
-### code chunk number 9: routePlot
-###################################################
-plotRoute(runs, session = 4, zoom = 13, source = "osm")
 
 
 ###################################################
@@ -78,7 +78,7 @@ print(runSummary, digits = 3)
 ###################################################
 ## runSummaryFull <- summary(runs)
 ## plot(runSummaryFull, group = c("total", "moving"),
-##     what = c("avgSpeed", "distance", "duration", "avgHeartRate"))
+##   what = c("avgSpeed", "distance", "duration", "avgHeartRate"))
 
 
 ###################################################
@@ -86,16 +86,15 @@ print(runSummary, digits = 3)
 ###################################################
 runSummaryFull <- summary(runs)
 plot(runSummaryFull, group = c("total", "moving"),
-    what = c("avgSpeed", "distance", "duration", "avgHeartRate"))
+  what = c("avgSpeed", "distance", "duration", "avgHeartRate"))
 
 
 ###################################################
 ### code chunk number 13: zones (eval = FALSE)
 ###################################################
-## runZones <- zones(runs[1:4], what = "speed", breaks = list(speed = c(0, 2:6, 12.5)))
-## ## if breaks is a named list, argument 'what' can be left unspecified
+## runZones <- zones(runs[1:4], what = "speed", 
+##   breaks = list(speed = c(0, 2:6, 12.5)))
 ## runZones <- zones(runs[1:4], breaks = list(speed = c(0, 2:6, 12.5)))
-## ## if only a single variable is to be evaluated, 'breaks' can also be a vector
 ## runZones <- zones(runs[1:4], what = "speed", breaks = c(0, 2:6, 12.5))
 ## plot(runZones)
 
@@ -103,10 +102,9 @@ plot(runSummaryFull, group = c("total", "moving"),
 ###################################################
 ### code chunk number 14: zonesPlot
 ###################################################
-runZones <- zones(runs[1:4], what = "speed", breaks = list(speed = c(0, 2:6, 12.5)))
-## if breaks is a named list, argument 'what' can be left unspecified
+runZones <- zones(runs[1:4], what = "speed", 
+  breaks = list(speed = c(0, 2:6, 12.5)))
 runZones <- zones(runs[1:4], breaks = list(speed = c(0, 2:6, 12.5)))
-## if only a single variable is to be evaluated, 'breaks' can also be a vector
 runZones <- zones(runs[1:4], what = "speed", breaks = c(0, 2:6, 12.5))
 plot(runZones)
 
@@ -115,7 +113,7 @@ plot(runZones)
 ### code chunk number 15: Wprime (eval = FALSE)
 ###################################################
 ## wexp <- Wprime(runs, session = 11, quantity = "expended",
-##                cp = 4, version = "2012")
+##   cp = 4, version = "2012")
 ## plot(wexp, scaled = TRUE)
 
 
@@ -130,8 +128,8 @@ plot(wexp, scaled = TRUE)
 ### code chunk number 17: distrProfiles (eval = FALSE)
 ###################################################
 ## dProfile <- distributionProfile(runs, session = 1:4,
-##     what = c("speed", "heart.rate"),
-##     grid = list(speed = seq(0, 12.5, by = 0.05), heart.rate = seq(0, 250)))
+##   what = c("speed", "heart.rate"),
+##   grid = list(speed = seq(0, 12.5, by = 0.05), heart.rate = seq(0, 250)))
 ## plot(dProfile, multiple = TRUE)
 
 
@@ -140,8 +138,8 @@ plot(wexp, scaled = TRUE)
 ###################################################
 ## set.seed(1)
 ## dProfile <- distributionProfile(runs, session = 1:4,
-##     what = c("speed", "heart.rate"),
-##     grid = list(speed = seq(0, 12.5, by = 0.05), heart.rate = seq(0, 250)))
+##   what = c("speed", "heart.rate"),
+##   grid = list(speed = seq(0, 12.5, by = 0.05), heart.rate = seq(0, 250)))
 ## dProfileS <- smoother(dProfile, cores = 2)
 
 
@@ -153,8 +151,8 @@ if(cache & file.exists("example_dProfile.rda")) {
 } else {
 set.seed(1)
 dProfile <- distributionProfile(runs, session = 1:4,
-    what = c("speed", "heart.rate"),
-    grid = list(speed = seq(0, 12.5, by = 0.05), heart.rate = seq(0, 250)))
+  what = c("speed", "heart.rate"),
+  grid = list(speed = seq(0, 12.5, by = 0.05), heart.rate = seq(0, 250)))
 dProfileS <- smoother(dProfile, cores = 2)
 if(cache) {
   save(dProfile, dProfileS, file = "example_dProfile.rda")
@@ -187,12 +185,9 @@ plot(cProfile, multiple = TRUE, cores = 2)
 
 
 ###################################################
-### code chunk number 23: trackeR.Rnw:2597-2603
+### code chunk number 23: trackeR.Rnw:2607-2610
 ###################################################
-## get the units for the variables in run
 getUnits(run)
-
-## change the unit of speed into miles per hour
 runTr2 <- changeUnits(run, variable = "speed", unit = "mi_per_h")
 getUnits(runTr2)
 
@@ -207,13 +202,10 @@ changeUnits(runSummary, variable = "speed", unit = "ft_per_h")
 ###################################################
 ### code chunk number 25: thresholdPlots (eval = FALSE)
 ###################################################
-## ## without thresholds
 ## plot(runs, session = 4, what = "speed", threshold = FALSE)
-## ## with default thresholds
 ## plot(runs, session = 4, what = "speed")
-## ## with default thresholds and smoothing
-## plot(runs, session = 4, what = "speed", smooth = TRUE, fun = "median", width = 20)
-## ## thresholding and smoothing outside of plot method
+## plot(runs, session = 4, what = "speed", smooth = TRUE, fun = "median", 
+##   width = 20)
 ## run4 <- threshold(runs[4])
 ## run4S <- smoother(run4, what = "speed", fun = "median", width = 20)
 ## plot(run4S, what = "speed", smooth = FALSE) 
@@ -249,40 +241,43 @@ plot(run4S, what = "speed", smooth = FALSE) + ggplot2::expand_limits(y = c(0, 12
 ### code chunk number 30: AppData
 ###################################################
 library("trackeR")
-data(runs, package = "trackeR")
+data("runs", package = "trackeR")
 runsSummary <- summary(runs)
 
 
 ###################################################
-### code chunk number 31: AppProfiles0 (eval = FALSE)
+### code chunk number 31: casestudyData (eval = FALSE)
 ###################################################
 ## library("trackeR")
-## ## load data
-## data(runs, package = "trackeR")
-## ## apply default thresholds
+## data("runs", package = "trackeR")
 ## runsT <- threshold(runs)
-## ## get and smooth distribution profiles 
 ## dpRuns <- distributionProfile(runsT, what = "speed")
-## dpRunsS <- smoother(dpRuns, cores = 2)
-## ## get concentration profiles
+## dpRunsS <- smoother(dpRuns)
 ## cpRuns <- concentrationProfile(dpRunsS)
 
 
 ###################################################
-### code chunk number 32: AppProfiles
+### code chunk number 32: AppProfiles0 (eval = FALSE)
+###################################################
+## library("trackeR")
+## data("runs", package = "trackeR")
+## runsT <- threshold(runs)
+## dpRuns <- distributionProfile(runsT, what = "speed")
+## dpRunsS <- smoother(dpRuns, cores = 2)
+## cpRuns <- concentrationProfile(dpRunsS)
+
+
+###################################################
+### code chunk number 33: AppProfiles
 ###################################################
 if(cache & file.exists("appProfiles.rda")) {
     load("appProfiles.rda")
 } else {
 library("trackeR")
-## load data
-data(runs, package = "trackeR")
-## apply default thresholds
+data("runs", package = "trackeR")
 runsT <- threshold(runs)
-## get and smooth distribution profiles 
 dpRuns <- distributionProfile(runsT, what = "speed")
 dpRunsS <- smoother(dpRuns, cores = 2)
-## get concentration profiles
 cpRuns <- concentrationProfile(dpRunsS)
 if(cache) {
    save(dpRuns, dpRunsS, cpRuns, file = "appProfiles.rda")
@@ -293,29 +288,26 @@ if(cache) {
 
 
 ###################################################
-### code chunk number 33: AppCPplot
+### code chunk number 34: AppCPplot
 ###################################################
-plot(cpRuns, multiple = TRUE, smooth = FALSE) + theme(legend.position="none")
+plot(cpRuns, multiple = TRUE, smooth = FALSE) #+ theme(legend.position = "none")
 
 
 ###################################################
-### code chunk number 34: AppFunPrep
+### code chunk number 35: AppFunPrep
 ###################################################
-## prepare functional data
 library("fda")
 gridSpeed <- seq(0, 12.5, length = 251)
 sp <- matrix(unlist(cpRuns$speed), ncol = 250, byrow = TRUE,
-             dimnames = list(names(cpRuns$speed), gridSpeed[-1]))
+  dimnames = list(names(cpRuns$speed), gridSpeed[-1]))
 spfd <- Data2fd(argvals = gridSpeed[-1], y = t(sp))
-## fit functional PCA
 sppca <- pca.fd(spfd, nharm = 4)
-## share of variance
 varprop <- round(sppca$varprop * 100); names(varprop) <- 1:4
 varprop
 
 
 ###################################################
-### code chunk number 35: mypcaplot
+### code chunk number 36: mypcaplot
 ###################################################
 mypcaplot <- function (x, nx = 128, pointplot = TRUE, harm = 0, expand = 0, 
     cycle = FALSE, xlab = "argvals", ...) 
@@ -459,7 +451,7 @@ mypcaplot <- function (x, nx = 128, pointplot = TRUE, harm = 0, expand = 0,
 
 
 ###################################################
-### code chunk number 36: AppHarmonicsPlotSpeed
+### code chunk number 37: AppHarmonicsPlotSpeed
 ###################################################
 ##source("mypcaplot.R")
 pp <- FALSE ## dotted = -, dashed = +
@@ -469,7 +461,7 @@ par(mfrow = c(1,1), ask = TRUE)
 
 
 ###################################################
-### code chunk number 37: AppScoresPlot1
+### code chunk number 38: AppScoresPlot1
 ###################################################
 ## plot scores vs summary statistics
 scoresSP <- data.frame(sppca$scores)
@@ -483,7 +475,7 @@ ggplot(d) + geom_point(aes(x = durationMoving, y = speed_pc1)) + theme_bw() + la
 
 
 ###################################################
-### code chunk number 38: AppScoresPlot2
+### code chunk number 39: AppScoresPlot2
 ###################################################
 ## pc2 ~ avg speed (moving)
 ggplot(d) + geom_point(aes(x = avgSpeedMoving, y = speed_pc2)) + theme_bw() + labs(x = "average speed moving [m/s]", y = "PC2")
