@@ -12,7 +12,7 @@ cache <- FALSE
 
 
 ###################################################
-### code chunk number 2: trackeR.Rnw:1363-1367
+### code chunk number 2: trackeR.Rnw:1850-1854
 ###################################################
 filepath <- system.file("extdata", "2013-06-08-090442.TCX", 
   package = "trackeR")
@@ -21,13 +21,13 @@ str(runDF)
 
 
 ###################################################
-### code chunk number 3: trackeR.Rnw:2014-2015
+### code chunk number 3: trackeR.Rnw:2502-2503
 ###################################################
 runTr0 <- trackeRdata(runDF)
 
 
 ###################################################
-### code chunk number 4: trackeR.Rnw:2023-2025
+### code chunk number 4: trackeR.Rnw:2511-2513
 ###################################################
 runTr1 <- readContainer(filepath, type = "tcx", timezone = "GMT")
 identical(runTr0, runTr1)
@@ -48,7 +48,7 @@ data("runs", package = "trackeR")
 
 
 ###################################################
-### code chunk number 7: trackeR.Rnw:2073-2074 (eval = FALSE)
+### code chunk number 7: trackeR.Rnw:2561-2562 (eval = FALSE)
 ###################################################
 ## plot(runs, session = 1:3)
 
@@ -60,7 +60,7 @@ plot(runs, session = 1:3)
 
 
 ###################################################
-### code chunk number 9: trackeR.Rnw:2098-2099 (eval = FALSE)
+### code chunk number 9: trackeR.Rnw:2588-2589 (eval = FALSE)
 ###################################################
 ## plotRoute(runs, session = 4, zoom = 13, source = "osm")
 
@@ -185,7 +185,7 @@ plot(cProfile, multiple = TRUE, cores = 2)
 
 
 ###################################################
-### code chunk number 23: trackeR.Rnw:2607-2610
+### code chunk number 23: trackeR.Rnw:3100-3103
 ###################################################
 getUnits(run)
 runTr2 <- changeUnits(run, variable = "speed", unit = "mi_per_h")
@@ -297,171 +297,23 @@ plot(cpRuns, multiple = TRUE, smooth = FALSE) #+ theme(legend.position = "none")
 ### code chunk number 35: AppFunPrep
 ###################################################
 library("fda")
-gridSpeed <- seq(0, 12.5, length = 251)
-sp <- matrix(unlist(cpRuns$speed), ncol = 250, byrow = TRUE,
-  dimnames = list(names(cpRuns$speed), gridSpeed[-1]))
-spfd <- Data2fd(argvals = gridSpeed[-1], y = t(sp))
-sppca <- pca.fd(spfd, nharm = 4)
+cpFd <- profile2fd(cpRuns, what = "speed")
+sppca <- pca.fd(cpFd, nharm = 4)
 varprop <- round(sppca$varprop * 100); names(varprop) <- 1:4
 varprop
 
 
 ###################################################
-### code chunk number 36: mypcaplot
+### code chunk number 36: AppHarmonicsPlotSpeed
 ###################################################
-mypcaplot <- function (x, nx = 128, pointplot = TRUE, harm = 0, expand = 0, 
-    cycle = FALSE, xlab = "argvals", ...) 
-{
-    pcafd <- x
-    if (!(inherits(pcafd, "pca.fd"))) 
-        stop("Argument 'x' is not a pca.fd object.")
-    harmfd <- pcafd[[1]]
-    basisfd <- harmfd$basis
-    rangex <- basisfd$rangeval
-    if (length(nx) > 1) {
-        argvals <- nx
-        nx <- length(x)
-    }
-    else {
-        argvals <- seq(rangex[1], rangex[2], length = nx)
-    }
-    fdmat <- eval.fd(argvals, harmfd)
-    meanmat <- eval.fd(argvals, pcafd$meanfd)
-    dimfd <- dim(fdmat)
-    nharm <- dimfd[2]
-    plotsPerPg <- sum(par("mfrow"))
-    harm <- as.vector(harm)
-    if (harm[1] == 0) 
-        harm <- (1:nharm)
-    if (length(dimfd) == 2) {
-        for (jharm in 1:length(harm)) {
-            if (jharm == 2) {
-                op <- par(ask = TRUE)
-                on.exit(par(op))
-            }
-            iharm <- harm[jharm]
-            if (expand == 0) {
-                fac <- sqrt(pcafd$values[iharm])
-            }
-            else {
-                fac <- expand
-            }
-            vecharm <- fdmat[, iharm]
-            pcmat <- cbind(meanmat + fac * vecharm, meanmat - 
-                fac * vecharm)
-            if (pointplot) 
-                plottype <- "p"
-            else plottype <- "l"
-            percentvar <- round(100 * pcafd$varprop[iharm], 1)
-            plot(argvals, meanmat, type = "l", ylim = c(min(pcmat), 
-                max(pcmat)), ylab = paste("Harmonic", iharm), xlab = xlab,
-                main = paste("PCA Function", iharm, "(Percentage of Variability", 
-                  percentvar, ")"))
-            if (pointplot) {
-                points(argvals, pcmat[, 1], pch = "+")
-                points(argvals, pcmat[, 2], pch = "-")
-            }
-            else {
-                lines(argvals, pcmat[, 1], lty = 2)
-                lines(argvals, pcmat[, 2], lty = 3)
-            }
-        }
-    }
-    else {
-        if (cycle && dimfd[3] == 2) {
-            meanmat <- drop(meanmat)
-            for (jharm in 1:length(harm)) {
-                if (jharm == 2) {
-                  op <- par(ask = TRUE)
-                  on.exit(par(op))
-                }
-                iharm <- harm[jharm]
-                {
-                  if (expand == 0) 
-                    fac <- 2 * sqrt(pcafd$values[iharm])
-                  else fac <- expand
-                }
-                matharm <- fdmat[, iharm, ]
-                mat1 <- meanmat + fac * matharm
-                mat2 <- meanmat - fac * matharm
-                if (pointplot) 
-                  plottype <- "p"
-                else plottype <- "l"
-                percentvar <- round(100 * pcafd$varprop[iharm], 
-                  1)
-                plot(meanmat[, 1], meanmat[, 2], type = plottype, 
-                  xlim = c(min(c(mat1[, 1], mat2[, 1])), max(c(mat1[, 
-                    1], mat2[, 1]))), ylim = c(min(c(mat1[, 2], 
-                    mat2[, 2])), max(c(mat1[, 2], mat2[, 2]))), 
-                  main = paste("PCA Function", iharm, "(Percentage of Variability", 
-                    percentvar, ")"), ...)
-                if (pointplot) {
-                  points(mat1[, 1], mat1[, 2], pch = "+")
-                  points(mat2[, 1], mat2[, 2], pch = "-")
-                }
-                else {
-                  lines(mat1[, 1], mat1[, 2], lty = 2)
-                  lines(mat2[, 1], mat2[, 2], lty = 3)
-                }
-            }
-        }
-        else {
-            for (jharm in 1:length(harm)) {
-                if (jharm == 2) {
-                  op <- par(ask = TRUE)
-                  on.exit(par(op))
-                }
-                iharm <- harm[jharm]
-                fac <- {
-                  if (expand == 0) 
-                    sqrt(pcafd$values[iharm])
-                  else expand
-                }
-                meanmat <- drop(meanmat)
-                matharm <- fdmat[, iharm, ]
-                nvar <- dim(matharm)[2]
-                for (jvar in 1:nvar) {
-                  pcmat <- cbind(meanmat[, jvar] + fac * matharm[, 
-                    jvar], meanmat[, jvar] - fac * matharm[, 
-                    jvar])
-                  if (pointplot) 
-                    plottype <- "p"
-                  else plottype <- "l"
-                  percentvar <- round(100 * pcafd$varprop[iharm], 
-                    1)
-                  plot(argvals, meanmat[, jvar], type = plottype, xlab = xlab,
-                    ylab = paste("Harmonic", iharm), sub = paste("PCA Function", 
-                      iharm, "(Percentage of Variability", percentvar, 
-                      ")"), main = dimnames(fdmat)[[3]][jvar], 
-                    ...)
-                  if (pointplot) {
-                    points(argvals, pcmat[, 1], pch = "+")
-                    points(argvals, pcmat[, 2], pch = "-")
-                  }
-                  else {
-                    lines(argvals, pcmat[, 1], lty = 2)
-                    lines(argvals, pcmat[, 2], lty = 3)
-                  }
-                }
-            }
-        }
-    }
-    invisible(NULL)
-}
-
-
-###################################################
-### code chunk number 37: AppHarmonicsPlotSpeed
-###################################################
-##source("mypcaplot.R")
+## refit fPCA so that trackeR's plot method is used
+sppca <- funPCA(cpRuns, what = "speed", nharm = 4)
 pp <- FALSE ## dotted = -, dashed = +
-par(mfrow = c(2,1), ask = FALSE)
-mypcaplot(sppca, harm = 1:2, pointplot = pp, xlab = "Speed [m/s]")
-par(mfrow = c(1,1), ask = TRUE)
+plot(sppca, harm = 1:2, pointplot = pp)
 
 
 ###################################################
-### code chunk number 38: AppScoresPlot1
+### code chunk number 37: AppScoresPlot1
 ###################################################
 ## plot scores vs summary statistics
 scoresSP <- data.frame(sppca$scores)
@@ -475,7 +327,7 @@ ggplot(d) + geom_point(aes(x = durationMoving, y = speed_pc1)) + theme_bw() + la
 
 
 ###################################################
-### code chunk number 39: AppScoresPlot2
+### code chunk number 38: AppScoresPlot2
 ###################################################
 ## pc2 ~ avg speed (moving)
 ggplot(d) + geom_point(aes(x = avgSpeedMoving, y = speed_pc2)) + theme_bw() + labs(x = "average speed moving [m/s]", y = "PC2")
