@@ -3,7 +3,7 @@
 ###################################################
 ### code chunk number 1: preliminaries
 ###################################################
-options(width = 70, prompt = "R> ", continue = "+  ")
+options(width = 70, prompt = "R> ", continue = "+  ", useFancyQuotes = FALSE)
 library("trackeR")
 library("ggplot2")
 data("runs", package = "trackeR")
@@ -21,13 +21,13 @@ str(runDF)
 
 
 ###################################################
-### code chunk number 3: trackeR.Rnw:2502-2503
+### code chunk number 3: trackeR.Rnw:2503-2504
 ###################################################
 runTr0 <- trackeRdata(runDF)
 
 
 ###################################################
-### code chunk number 4: trackeR.Rnw:2511-2513
+### code chunk number 4: trackeR.Rnw:2512-2514
 ###################################################
 runTr1 <- readContainer(filepath, type = "tcx", timezone = "GMT")
 identical(runTr0, runTr1)
@@ -48,7 +48,7 @@ data("runs", package = "trackeR")
 
 
 ###################################################
-### code chunk number 7: trackeR.Rnw:2561-2562 (eval = FALSE)
+### code chunk number 7: trackeR.Rnw:2562-2563 (eval = FALSE)
 ###################################################
 ## plot(runs, session = 1:3)
 
@@ -60,7 +60,7 @@ plot(runs, session = 1:3)
 
 
 ###################################################
-### code chunk number 9: trackeR.Rnw:2588-2589 (eval = FALSE)
+### code chunk number 9: trackeR.Rnw:2589-2590 (eval = FALSE)
 ###################################################
 ## plotRoute(runs, session = 4, zoom = 13, source = "osm")
 
@@ -185,7 +185,7 @@ plot(cProfile, multiple = TRUE, cores = 2)
 
 
 ###################################################
-### code chunk number 23: trackeR.Rnw:3100-3103
+### code chunk number 23: trackeR.Rnw:3101-3104
 ###################################################
 getUnits(run)
 runTr2 <- changeUnits(run, variable = "speed", unit = "mi_per_h")

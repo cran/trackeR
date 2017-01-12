@@ -1,6 +1,6 @@
 Package: trackeR
-Version: 0.0.4
-Date: 2016-10-19
+Version: 0.0.5
+Date: 2017-01-11
 Title: Infrastructure for Running and Cycling Data from GPS-Enabled
         Tracking Devices
 Authors@R: c(person(given = "Hannah", family = "Frick", role = c("aut", "cre"), email = "h.frick@ucl.ac.uk"),
@@ -21,9 +21,9 @@ URL: https://github.com/hfrick/trackeR
 BugReports: https://github.com/hfrick/trackeR/issues
 RoxygenNote: 5.0.1
 NeedsCompilation: no
-Packaged: 2016-10-19 15:41:06 UTC; frick
+Packaged: 2017-01-11 17:01:23 UTC; frick
 Author: Hannah Frick [aut, cre],
   Ioannis Kosmidis [aut]
 Maintainer: Hannah Frick <h.frick@ucl.ac.uk>
 Repository: CRAN
-Date/Publication: 2016-10-20 22:12:13
+Date/Publication: 2017-01-12 15:42:44
