@@ -12,7 +12,7 @@ cache <- FALSE
 
 
 ###################################################
-### code chunk number 2: trackeR.Rnw:1850-1854
+### code chunk number 2: trackeR.Rnw:1854-1858
 ###################################################
 filepath <- system.file("extdata", "2013-06-08-090442.TCX", 
   package = "trackeR")
@@ -21,13 +21,13 @@ str(runDF)
 
 
 ###################################################
-### code chunk number 3: trackeR.Rnw:2503-2504
+### code chunk number 3: trackeR.Rnw:2507-2508
 ###################################################
 runTr0 <- trackeRdata(runDF)
 
 
 ###################################################
-### code chunk number 4: trackeR.Rnw:2512-2514
+### code chunk number 4: trackeR.Rnw:2516-2518
 ###################################################
 runTr1 <- readContainer(filepath, type = "tcx", timezone = "GMT")
 identical(runTr0, runTr1)
@@ -48,7 +48,7 @@ data("runs", package = "trackeR")
 
 
 ###################################################
-### code chunk number 7: trackeR.Rnw:2562-2563 (eval = FALSE)
+### code chunk number 7: trackeR.Rnw:2566-2567 (eval = FALSE)
 ###################################################
 ## plot(runs, session = 1:3)
 
@@ -60,9 +60,9 @@ plot(runs, session = 1:3)
 
 
 ###################################################
-### code chunk number 9: trackeR.Rnw:2589-2590 (eval = FALSE)
+### code chunk number 9: trackeR.Rnw:2593-2594 (eval = FALSE)
 ###################################################
-## plotRoute(runs, session = 4, zoom = 13, source = "osm")
+## plotRoute(runs, session = 4, zoom = 13)
 
 
 ###################################################
@@ -185,7 +185,7 @@ plot(cProfile, multiple = TRUE, cores = 2)
 
 
 ###################################################
-### code chunk number 23: trackeR.Rnw:3101-3104
+### code chunk number 23: trackeR.Rnw:3105-3108
 ###################################################
 getUnits(run)
 runTr2 <- changeUnits(run, variable = "speed", unit = "mi_per_h")
