@@ -2,10 +2,10 @@
 % Please edit documentation in R/trackeRdata_summary.R
 \name{plot.trackeRdataSummary}
 \alias{plot.trackeRdataSummary}
-\title{Plot an object of class trackeRdataSummary.}
+\title{Plot an object of class \code{\link{trackeRdataSummary}}.}
 \usage{
 \method{plot}{trackeRdataSummary}(x, date = TRUE, what = NULL,
-  group = NULL, lines = TRUE, ...)
+  group = NULL, trend = TRUE, ...)
 }
 \arguments{
 \item{x}{An object of class \code{trackeRdataSummary}.}
@@ -17,19 +17,21 @@
 \item{group}{Which group of variables should be plotted? This can either be
 \code{total} or \code{moving}. Default is both.}
 
-\item{lines}{Should interpolating lines be plotted?}
+\item{trend}{Should a smooth trend be plotted?}
 
 \item{...}{Currently not used.}
 }
 \description{
-Plot an object of class trackeRdataSummary.
+Plot an object of class \code{\link{trackeRdataSummary}}.
 }
 \examples{
-data("runs", package = "trackeR")
+\dontrun{
+data('runs', package = 'trackeR')
 runSummary <- summary(runs)
 plot(runSummary)
-plot(runSummary, date = FALSE, group = "total",
-    what = c("distance", "duration", "avgSpeed"))
+plot(runSummary, date = FALSE, group = 'total',
+    what = c('distance', 'duration', 'avgSpeed'))
+}
 }
 \seealso{
 \code{\link{summary.trackeRdata}}

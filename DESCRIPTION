@@ -1,35 +1,32 @@
 Package: trackeR
-Version: 1.0.0
-Date: 2017-01-11
-Title: Infrastructure for Running and Cycling Data from GPS-Enabled
-        Tracking Devices
-Authors@R: c(person(given = "Hannah", family = "Frick",
-	   	    role = c("aut", "cre"),
-		    email = "hannah.frick@gmail.com",
-		    comment = c(ORCID = "0000-0002-6049-5258")),
-             person(given = "Ioannis", family = "Kosmidis",
-	     	    role = "aut",
-		    email = "i.kosmidis@ucl.ac.uk",
-		    comment = c(ORCID = "0000-0003-1556-0302")))
-Description: The aim of this package is to provide infrastructure for handling running and cycling
-    data from GPS-enabled tracking devices. After extraction and appropriate
-    manipulation of the training or competition attributes, the data are placed
-    into session-based and unit-aware data objects of class 'trackeRdata' (S3 class). The
-    information in the resulting data objects can then be visualised, summarised,
-    and analysed through corresponding flexible and extensible methods.
-Depends: R (>= 2.10.0), zoo, ggplot2
-Imports: parallel, XML, RSQLite, jsonlite, raster, scam, fda, ggmap,
-        leaflet, gridExtra, gtable
-Suggests: testthat, knitr, rmarkdown
+Version: 1.1
+Title: Infrastructure for Running, Cycling and Swimming Data from
+        GPS-Enabled Tracking Devices
+Authors@R: c(person(given = "Ioannis", family = "Kosmidis",
+	            role = c("aut", "cre"), email = "ioannis.kosmidis@warwick.ac.uk",
+		    comment = c(ORCID = "0000-0003-1556-0302")),
+             person(given = "Hannah", family = "Frick",
+	   	    role = "aut", email = "hannah.frick@gmail.com",
+	            comment = c(ORCID = "0000-0002-6049-5258")),
+	     person(given = "Robin", family = "Hornak",
+	            role = "aut", email = "robinhornak@gmail.com"))
+Description: Provides infrastructure for handling running, cycling and swimming data from GPS-enabled tracking devices within R. The package provides methods to extract, clean and organise workout and competition data into session-based and unit-aware data objects of class 'trackeRdata' (S3 class). The information can then be visualised, summarised, and analysed through flexible and extensible methods. Frick and Kosmidis (2017) <doi: 10.18637/jss.v082.i07>, which is updated and maintained as one of the vignettes, provides detailed descriptions of the package and its methods, and real-data demonstrations of the package functionality.
+Depends: R (>= 3.1.0), zoo
+Imports: ggplot2, ggridges, xml2, RSQLite, jsonlite, raster, scam,
+        foreach, fda, sp, leaflet, ggmap, gridExtra, gtable
+Suggests: testthat, knitr, rmarkdown, covr
 VignetteBuilder: knitr
-License: GPL-2 | GPL-3
-URL: https://github.com/hfrick/trackeR
-BugReports: https://github.com/hfrick/trackeR/issues
+License: GPL-3
+URL: https://github.com/trackerproject/trackeR
+BugReports: https://github.com/trackerproject/trackeR/issues
 RoxygenNote: 6.0.1
+Encoding: UTF-8
+LazyData: true
 NeedsCompilation: no
-Packaged: 2017-11-26 18:06:07 UTC; hannah
-Author: Hannah Frick [aut, cre] (0000-0002-6049-5258),
-  Ioannis Kosmidis [aut] (0000-0003-1556-0302)
-Maintainer: Hannah Frick <hannah.frick@gmail.com>
+Packaged: 2018-09-24 10:55:54 UTC; yiannis
+Author: Ioannis Kosmidis [aut, cre] (<https://orcid.org/0000-0003-1556-0302>),
+  Hannah Frick [aut] (<https://orcid.org/0000-0002-6049-5258>),
+  Robin Hornak [aut]
+Maintainer: Ioannis Kosmidis <ioannis.kosmidis@warwick.ac.uk>
 Repository: CRAN
-Date/Publication: 2017-11-27 09:03:38 UTC
+Date/Publication: 2018-09-24 12:00:03 UTC

@@ -1,4 +1,5 @@
 ### R code from vignette source 'trackeR.Rnw'
+### Encoding: UTF-8
 
 ###################################################
 ### code chunk number 1: preliminaries
@@ -12,61 +13,75 @@ cache <- FALSE
 
 
 ###################################################
-### code chunk number 2: trackeR.Rnw:1854-1858
+### code chunk number 2: trackeR.Rnw:1821-1825
 ###################################################
-filepath <- system.file("extdata", "2013-06-08-090442.TCX", 
-  package = "trackeR")
+filepath <- system.file("extdata/tcx", "2013-06-01-183220.TCX",
+                        package = "trackeR")
 runDF <- readTCX(file = filepath, timezone = "GMT")
 str(runDF)
 
 
 ###################################################
-### code chunk number 3: trackeR.Rnw:2507-2508
+### code chunk number 3: trackeR.Rnw:2438-2439
 ###################################################
 runTr0 <- trackeRdata(runDF)
 
 
 ###################################################
-### code chunk number 4: trackeR.Rnw:2516-2518
+### code chunk number 4: trackeR.Rnw:2447-2448
+###################################################
+runTr0
+
+
+###################################################
+### code chunk number 5: trackeR.Rnw:2456-2458
 ###################################################
 runTr1 <- readContainer(filepath, type = "tcx", timezone = "GMT")
 identical(runTr0, runTr1)
 
 
 ###################################################
-### code chunk number 5: dataLoad
+### code chunk number 6: trackeR.Rnw:2467-2470
+###################################################
+gpxDir <- system.file("extdata/gpx", package = "trackeR")
+workouts <- readDirectory(gpxDir, verbose = FALSE)
+get_sport(workouts)
+
+
+###################################################
+### code chunk number 7: dataLoad
 ###################################################
 data("run", package = "trackeR")
 data("runs", package = "trackeR")
 
 
 ###################################################
-### code chunk number 6: dataLoad0 (eval = FALSE)
+### code chunk number 8: dataLoad0 (eval = FALSE)
 ###################################################
 ## data("run", package = "trackeR")
 ## data("runs", package = "trackeR")
 
 
 ###################################################
-### code chunk number 7: trackeR.Rnw:2566-2567 (eval = FALSE)
+### code chunk number 9: trackeR.Rnw:2518-2519 (eval = FALSE)
 ###################################################
 ## plot(runs, session = 1:3)
 
 
 ###################################################
-### code chunk number 8: defaultPlot
+### code chunk number 10: defaultPlot
 ###################################################
 plot(runs, session = 1:3)
 
 
 ###################################################
-### code chunk number 9: trackeR.Rnw:2593-2594 (eval = FALSE)
+### code chunk number 11: trackeR.Rnw:2545-2546 (eval = FALSE)
 ###################################################
 ## plotRoute(runs, session = 4, zoom = 13)
 
 
 ###################################################
-### code chunk number 10: summarySessionsPrint
+### code chunk number 12: summarySessionsPrint
 ###################################################
 summary(runs, session = 1:2)
 runSummary <- summary(runs, session = 1)
@@ -74,7 +89,7 @@ print(runSummary, digits = 3)
 
 
 ###################################################
-### code chunk number 11: summarySessions (eval = FALSE)
+### code chunk number 13: summarySessions (eval = FALSE)
 ###################################################
 ## runSummaryFull <- summary(runs)
 ## plot(runSummaryFull, group = c("total", "moving"),
@@ -82,7 +97,7 @@ print(runSummary, digits = 3)
 
 
 ###################################################
-### code chunk number 12: summarySessionsPlot
+### code chunk number 14: summarySessionsPlot
 ###################################################
 runSummaryFull <- summary(runs)
 plot(runSummaryFull, group = c("total", "moving"),
@@ -90,9 +105,9 @@ plot(runSummaryFull, group = c("total", "moving"),
 
 
 ###################################################
-### code chunk number 13: zones (eval = FALSE)
+### code chunk number 15: zones (eval = FALSE)
 ###################################################
-## runZones <- zones(runs[1:4], what = "speed", 
+## runZones <- zones(runs[1:4], what = "speed",
 ##   breaks = list(speed = c(0, 2:6, 12.5)))
 ## runZones <- zones(runs[1:4], breaks = list(speed = c(0, 2:6, 12.5)))
 ## runZones <- zones(runs[1:4], what = "speed", breaks = c(0, 2:6, 12.5))
@@ -100,9 +115,9 @@ plot(runSummaryFull, group = c("total", "moving"),
 
 
 ###################################################
-### code chunk number 14: zonesPlot
+### code chunk number 16: zonesPlot
 ###################################################
-runZones <- zones(runs[1:4], what = "speed", 
+runZones <- zones(runs[1:4], what = "speed",
   breaks = list(speed = c(0, 2:6, 12.5)))
 runZones <- zones(runs[1:4], breaks = list(speed = c(0, 2:6, 12.5)))
 runZones <- zones(runs[1:4], what = "speed", breaks = c(0, 2:6, 12.5))
@@ -110,7 +125,7 @@ plot(runZones)
 
 
 ###################################################
-### code chunk number 15: Wprime (eval = FALSE)
+### code chunk number 17: Wprime (eval = FALSE)
 ###################################################
 ## wexp <- Wprime(runs, session = 11, quantity = "expended",
 ##   cp = 4, version = "2012")
@@ -118,78 +133,52 @@ plot(runZones)
 
 
 ###################################################
-### code chunk number 16: WprimePlot2
+### code chunk number 18: WprimePlot2
 ###################################################
 wexp <- Wprime(runs, session = 11, quantity = "expended", cp = 4, version = "2012")
 plot(wexp, scaled = TRUE)
 
 
 ###################################################
-### code chunk number 17: distrProfiles (eval = FALSE)
+### code chunk number 19: distrProfiles (eval = FALSE)
 ###################################################
 ## dProfile <- distributionProfile(runs, session = 1:4,
-##   what = c("speed", "heart.rate"),
-##   grid = list(speed = seq(0, 12.5, by = 0.05), heart.rate = seq(0, 250)))
+##   what = c("speed", "heart_rate"),
+##   grid = list(speed = seq(0, 12.5, by = 0.05), heart_rate = seq(0, 250)))
 ## plot(dProfile, multiple = TRUE)
-
-
-###################################################
-### code chunk number 18: dProfile0 (eval = FALSE)
-###################################################
-## set.seed(1)
-## dProfile <- distributionProfile(runs, session = 1:4,
-##   what = c("speed", "heart.rate"),
-##   grid = list(speed = seq(0, 12.5, by = 0.05), heart.rate = seq(0, 250)))
-## dProfileS <- smoother(dProfile, cores = 2)
-
-
-###################################################
-### code chunk number 19: dProfile
-###################################################
-if(cache & file.exists("example_dProfile.rda")) {
-  load("example_dProfile.rda")
-} else {
-set.seed(1)
-dProfile <- distributionProfile(runs, session = 1:4,
-  what = c("speed", "heart.rate"),
-  grid = list(speed = seq(0, 12.5, by = 0.05), heart.rate = seq(0, 250)))
-dProfileS <- smoother(dProfile, cores = 2)
-if(cache) {
-  save(dProfile, dProfileS, file = "example_dProfile.rda")
-} else {
-  if(file.exists("example_dProfile.rda")) file.remove("example_dProfile.rda")
-}
-}
 
 
 ###################################################
 ### code chunk number 20: dprofilePlot
 ###################################################
-plot(dProfileS, smooth = FALSE, multiple = TRUE)
+dProfile <- distributionProfile(runs, session = 1:4,
+  what = c("speed", "heart_rate"),
+  grid = list(speed = seq(0, 12.5, by = 0.05), heart_rate = seq(0, 250)))
+plot(dProfile, smooth = FALSE, multiple = TRUE)
 
 
 ###################################################
 ### code chunk number 21: concentrationProfiles (eval = FALSE)
 ###################################################
 ## cProfile <- concentrationProfile(dProfile, what = "speed")
-## plot(cProfile, multiple = TRUE)
+## plot(cProfile, multiple = TRUE, smooth = TRUE)
 
 
 ###################################################
 ### code chunk number 22: cprofilePlot
 ###################################################
 cProfile <- concentrationProfile(dProfile, what = "speed")
-plot(cProfile, multiple = TRUE, cores = 2)
+plot(cProfile, multiple = TRUE, smooth = TRUE)
 ## cProfileS <- concentrationProfile(dProfileS)
 ## plot(cProfileS, what = "speed", smooth = FALSE, multiple = TRUE)
 
 
 ###################################################
-### code chunk number 23: trackeR.Rnw:3105-3108
+### code chunk number 23: trackeR.Rnw:3025-3028
 ###################################################
-getUnits(run)
-runTr2 <- changeUnits(run, variable = "speed", unit = "mi_per_h")
-getUnits(runTr2)
+subset(getUnits(runs), sport == "running")
+runTr2 <- changeUnits(run, variable = "speed", unit = "mi_per_h", sport = "running")
+subset(getUnits(runTr2), sport == "running")
 
 
 ###################################################
@@ -204,11 +193,11 @@ changeUnits(runSummary, variable = "speed", unit = "ft_per_h")
 ###################################################
 ## plot(runs, session = 4, what = "speed", threshold = FALSE)
 ## plot(runs, session = 4, what = "speed")
-## plot(runs, session = 4, what = "speed", smooth = TRUE, fun = "median", 
+## plot(runs, session = 4, what = "speed", smooth = TRUE, fun = "median",
 ##   width = 20)
 ## run4 <- threshold(runs[4])
 ## run4S <- smoother(run4, what = "speed", fun = "median", width = 20)
-## plot(run4S, what = "speed", smooth = FALSE) 
+## plot(run4S, what = "speed", smooth = FALSE)
 
 
 ###################################################
@@ -238,7 +227,23 @@ plot(run4S, what = "speed", smooth = FALSE) + ggplot2::expand_limits(y = c(0, 12
 
 
 ###################################################
-### code chunk number 30: AppData
+### code chunk number 30: cP (eval = FALSE)
+###################################################
+## cProfile1 <- concentrationProfile(runs,  what = "speed",
+##                                   limits = list(speed = c(0, 12.5)))
+## ridges(cProfile1)
+
+
+###################################################
+### code chunk number 31: cpPlot
+###################################################
+cProfile1 <- concentrationProfile(runs,  what = "speed",
+                                  limits = list(speed = c(0, 12.5)))
+ridges(cProfile1)
+
+
+###################################################
+### code chunk number 32: AppData
 ###################################################
 library("trackeR")
 data("runs", package = "trackeR")
@@ -246,7 +251,7 @@ runsSummary <- summary(runs)
 
 
 ###################################################
-### code chunk number 31: casestudyData (eval = FALSE)
+### code chunk number 33: casestudyData (eval = FALSE)
 ###################################################
 ## library("trackeR")
 ## data("runs", package = "trackeR")
@@ -254,42 +259,18 @@ runsSummary <- summary(runs)
 ## dpRuns <- distributionProfile(runsT, what = "speed")
 ## dpRunsS <- smoother(dpRuns)
 ## cpRuns <- concentrationProfile(dpRunsS)
-
-
-###################################################
-### code chunk number 32: AppProfiles0 (eval = FALSE)
-###################################################
-## library("trackeR")
-## data("runs", package = "trackeR")
-## runsT <- threshold(runs)
-## dpRuns <- distributionProfile(runsT, what = "speed")
-## dpRunsS <- smoother(dpRuns, cores = 2)
-## cpRuns <- concentrationProfile(dpRunsS)
-
-
-###################################################
-### code chunk number 33: AppProfiles
-###################################################
-if(cache & file.exists("appProfiles.rda")) {
-    load("appProfiles.rda")
-} else {
-library("trackeR")
-data("runs", package = "trackeR")
-runsT <- threshold(runs)
-dpRuns <- distributionProfile(runsT, what = "speed")
-dpRunsS <- smoother(dpRuns, cores = 2)
-cpRuns <- concentrationProfile(dpRunsS)
-if(cache) {
-   save(dpRuns, dpRunsS, cpRuns, file = "appProfiles.rda")
-} else {
-    if(file.exists("appProfiles.rda")) file.remove("appProfiles.rda")
-}
-}
+## plot(cpRuns, multiple = TRUE, smooth = FALSE)
 
 
 ###################################################
 ### code chunk number 34: AppCPplot
 ###################################################
+library("trackeR")
+data("runs", package = "trackeR")
+runsT <- threshold(runs)
+dpRuns <- distributionProfile(runsT, what = "speed")
+dpRunsS <- smoother(dpRuns)
+cpRuns <- concentrationProfile(dpRunsS)
 plot(cpRuns, multiple = TRUE, smooth = FALSE) #+ theme(legend.position = "none")
 
 
