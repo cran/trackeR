@@ -33,11 +33,13 @@ plot(runs, session = 1:7)
 ## ---- plot_runs_2, fig.width = 7, fig.height = 5-------------------------
 plot(runs, session = 8, what = c("altitude", "pace"))
 
-## ---- plotRoute, eval = FALSE, message = FALSE, warning = FALSE, fig.width = 7, fig.height = 7----
-#  plot_route(runs, session = 1, source = "stamen")
+## ---- plotRoute, message = FALSE, warning = FALSE, fig.width = 7, fig.height = 7----
+tryCatch(plot_route(runs, session = 1, source = "stamen"),
+         error = function(x) "Failed to donwload map data")
 
 ## ---- leafletRoute, fig.width = 7, fig.height = 7------------------------
-leaflet_route(runs, session = c(1, 6, 12))
+tryCatch(leaflet_route(runs, session = c(1, 6, 12)),
+         error = function(x) "Failed to donwload map data")
 
 ## ---- summary------------------------------------------------------------
 summary(runs, session = 1, moving_threshold = c(cycling = 2, running = 1, swimming = 0.5))

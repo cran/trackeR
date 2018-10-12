@@ -1,6 +1,6 @@
-b769b697c1baa243649c325c1786ca0a *DESCRIPTION
+e8a117286957c478b9c3e654d4c773f9 *DESCRIPTION
 ead5468e7bc7ee6f12a2bbaa8c1e55ba *NAMESPACE
-42914a2f8d9899769c5ae8727328d11f *NEWS.md
+78faed5a8d4e80c2422736666ffe67c8 *NEWS.md
 30292a19a6a0d3caa5d0c5d8c873fe18 *R/Wprime.R
 647ac9608f69b055d614691ebd7bed88 *R/cleaning.R
 323fd1a2f69bb7c8ae6056854e3492b9 *R/concentrationProfile.R
@@ -26,12 +26,12 @@ d38c042c5954a9d3b7b96f0c3a1f8591 *data/run.rda
 56b3f0f3025360bb07bec196ba3c5050 *data/runs.rda
 5b6a0e297a40a771c1202eb7f85865f9 *inst/CITATION
 560cc018af155fb6e90d40f00908b1ca *inst/classifier.R
-be1284cd943dcab3f550eb3268d5bf53 *inst/doc/TourDetrackeR.R
-beed39ff95fb842a93355fa9d74ad0fc *inst/doc/TourDetrackeR.Rmd
-caa1f9b5777920f735422b07c428d17f *inst/doc/TourDetrackeR.html
+82aea666f31a39474aae1043f645dda9 *inst/doc/TourDetrackeR.R
+03f53b7c6e114bce3699abc481073837 *inst/doc/TourDetrackeR.Rmd
+9ee80ea9398a09e9e9c0c1e0aa7e796f *inst/doc/TourDetrackeR.html
 5b8946fba947990272bcab1be392a972 *inst/doc/trackeR.R
 04b98894cce06401569cede351b24e24 *inst/doc/trackeR.Rnw
-74b0f91dc2022bdb15a3774a43c32dcd *inst/doc/trackeR.pdf
+e056c3913ace332828deb3d617e447a6 *inst/doc/trackeR.pdf
 54a75baf581ab4623c53bd88f1fd326d *inst/extdata/gpx/20170708-154835-Run.gpx
 b405b8433a6e1d5da810c3ec9638f7a4 *inst/extdata/gpx/20170709-151453-Ride.gpx
 6bd528269de5e8444f73102d92f12b4d *inst/extdata/gpx/20170714-143644-Swim.gpx
@@ -131,7 +131,7 @@ ed5482853592ed970fe038e8a28fb0a0 *man/trackeR.Rd
 628760a048a008dd441142736034551d *man/trackeRdata.Rd
 2a65d6083949e383f3b31fde79998a6f *man/unique.trackeRdata.Rd
 143640b61199f63f24afe0ee63505993 *man/zones.Rd
-beed39ff95fb842a93355fa9d74ad0fc *vignettes/TourDetrackeR.Rmd
+03f53b7c6e114bce3699abc481073837 *vignettes/TourDetrackeR.Rmd
 7d8958972fbc2e5763911998ec8c4b87 *vignettes/plotRouteGoogle.pdf
 04b98894cce06401569cede351b24e24 *vignettes/trackeR.Rnw
 5ab94621103a846d0e3e4874d5474b87 *vignettes/trackeR.bib
