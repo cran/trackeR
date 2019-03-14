@@ -1,6 +1,6 @@
-a498c509373321cb117c70ee3ea5cf5d *DESCRIPTION
+b70ee6a9baa6a881b796299f1ad2e4b9 *DESCRIPTION
 ead5468e7bc7ee6f12a2bbaa8c1e55ba *NAMESPACE
-dabb6a2bd8f7b8293255a281a3e1e04d *NEWS.md
+89609ee25038462950e1b976dde4fd58 *NEWS.md
 30292a19a6a0d3caa5d0c5d8c873fe18 *R/Wprime.R
 647ac9608f69b055d614691ebd7bed88 *R/cleaning.R
 323fd1a2f69bb7c8ae6056854e3492b9 *R/concentrationProfile.R
@@ -16,7 +16,7 @@ ef0c6deb82c9a19170394122cc103395 *R/thresholds.R
 ad26fe95e2888e6a8167288e959d97e1 *R/trackeRdata.R
 8c8a1df9ccd5a1e2faf11f0618102c8b *R/trackeRdata_plot.R
 2ffcb98eec6c6e6bd7fc79bf9994d636 *R/trackeRdata_smoother.R
-6091a62db02958c1b8f297094a7c873f *R/trackeRdata_summary.R
+4095828054d4546e54d4997041ea724c *R/trackeRdata_summary.R
 0fad687b488027623499fe65b9037485 *R/trackeRdata_zones.R
 2ee6774ca412584684279d2c71363933 *R/units.R
 ef888712c51f99efa573ea22ebede467 *R/zzz_aliases.R
@@ -28,10 +28,10 @@ d38c042c5954a9d3b7b96f0c3a1f8591 *data/run.rda
 1fe0d43a9e2e4c2d4008001e390d8f2c *inst/art/hex_trackeR.svg
 82aea666f31a39474aae1043f645dda9 *inst/doc/TourDetrackeR.R
 03f53b7c6e114bce3699abc481073837 *inst/doc/TourDetrackeR.Rmd
-a556bab91a88a834f6364167bd2b58e4 *inst/doc/TourDetrackeR.html
+fb41b140df18695da6d65576496ac97f *inst/doc/TourDetrackeR.html
 5b8946fba947990272bcab1be392a972 *inst/doc/trackeR.R
 04b98894cce06401569cede351b24e24 *inst/doc/trackeR.Rnw
-057de8f23b6f76a8ab26f07f8b23d288 *inst/doc/trackeR.pdf
+201e777ad1ac8efc188637b13e4b9404 *inst/doc/trackeR.pdf
 54a75baf581ab4623c53bd88f1fd326d *inst/extdata/gpx/20170708-154835-Run.gpx
 b405b8433a6e1d5da810c3ec9638f7a4 *inst/extdata/gpx/20170709-151453-Ride.gpx
 6bd528269de5e8444f73102d92f12b4d *inst/extdata/gpx/20170714-143644-Swim.gpx

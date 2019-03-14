@@ -1,7 +1,12 @@
+## trackeR 1.4.0
+
+### Bug fixes
+* Fixed bug that could result in an error may appear when printing summaries for non-thresholded objects.
+
 ## trackeR 1.3.0
 
 ### New functionality
-* `threshold.trackeRdata` reports on the progress of the operation if `trace = TRUE` in its arguments
+* `threshold.trackeRdata` reports on the progress of the operation if `trace = TRUE` in its arguments.
 
 ### Enhancements
 * Added new logo
