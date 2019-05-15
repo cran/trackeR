@@ -11,7 +11,7 @@ knitr::opts_chunk$set(
 
 ## ---- runDF, message = FALSE---------------------------------------------
 library("trackeR")
-filepath <- system.file("extdata/tcx/", "2013-06-01-183220.TCX", package = "trackeR")
+filepath <- system.file("extdata/tcx/", "2013-06-01-183220.TCX.gz", package = "trackeR")
 runDF <- readTCX(file = filepath, timezone = "GMT")
 
 ## ---- str_runDF----------------------------------------------------------

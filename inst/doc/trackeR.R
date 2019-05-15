@@ -15,7 +15,7 @@ cache <- FALSE
 ###################################################
 ### code chunk number 2: trackeR.Rnw:1821-1825
 ###################################################
-filepath <- system.file("extdata/tcx", "2013-06-01-183220.TCX",
+filepath <- system.file("extdata/tcx", "2013-06-01-183220.TCX.gz",
                         package = "trackeR")
 runDF <- readTCX(file = filepath, timezone = "GMT")
 str(runDF)

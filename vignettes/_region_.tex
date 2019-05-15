@@ -1,0 +1,240 @@
+\message{ !name(trackeR.Rnw)}\documentclass[nojss]{jss}
+\usepackage{amsmath,amssymb,amsfonts,thumbpdf}
+\usepackage{dsfont}
+%\usepackage{pstricks}
+\usepackage{tikz}
+\usepackage{setspace}
+\usepackage{subcaption}
+\usepackage{color}
+
+%% additional commands
+\newcommand{\squote}[1]{`{#1}'}
+\newcommand{\dquote}[1]{``{#1}''}
+\newcommand{\fct}[1]{{\texttt{#1()}}}
+\newcommand{\class}[1]{\dquote{\texttt{#1}}}
+%% for internal use
+\newcommand{\fixme}[1]{\emph{\marginpar{FIXME} (#1)}}
+\newcommand{\readme}[1]{\emph{\marginpar{README} (#1)}}
+\newcommand{\iknote}[1]{{\color{blue} \bf [IK: #1] \marginpar{NOTE}}}
+\newcommand{\hfnote}[1]{{\color{orange} \bf [HF: #1] \marginpar{NOTE}}}
+
+\author{Hannah Frick\\University College London \And
+	Ioannis Kosmidis\\University of Warwick \\ The Alan Turing Institute}
+\Plainauthor{Hannah Frick, Ioannis Kosmidis}
+
+\title{\pkg{trackeR}: Infrastructure for Running, Cycling and Swimming Data from
+  GPS-Enabled Tracking Devices in \proglang{R}}
+\Plaintitle{trackeR: Infrastructure for Running, Cycling and Swimming Data from
+  GPS-Enabled Tracking Devices in R}
+\Shorttitle{\pkg{trackeR}: Infrastructure for Running, Cycling and Swimming Data in
+\proglang{R}}
+
+\Keywords{sports, tracking, work capacity, running, cycling, distribution profiles}
+\Plainkeywords{sports, tracking, work capacity, running, cycling, distribution profiles}
+
+
+\Abstract{
+
+  {\color{blue} This introduction to the \proglang{R} package
+    \pkg{trackeR} is a modified version of
+    \cite{trackeR:Frick+Kosmidis:2017}, published in the \emph{Journal
+      of Statistical Software}. The majority of changes and additions
+    in the text are due to work by Ioannis Kosmidis, which involved
+    the complete rewrite of most of the \pkg{trackeR} codebase at
+    version 1.1.0, in order to make the package faster across the
+    board and include support of all running, cycling and swimming and
+    sport-specific units and variables, fix bugs, and implement new
+    features and enhancements.}
+
+  The use of GPS-enabled tracking devices and heart rate
+  monitors is becoming increasingly common in sports and fitness
+  activities. The \pkg{trackeR} package aims to fill the gap
+  between the routine collection of data from such devices and their
+  analyses in \proglang{R}.
+  The package provides methods to import tracking data into data structures
+  which preserve units of measurement and are organised in sessions.
+  The package implements core infrastructure for
+  relevant summaries and visualisations, as well as support for handling units
+  of measurement. There are also methods for relevant analytic tools such
+  as time spent in zones, work capacity above critical power (known as
+  $W'$), and distribution and concentration profiles. A case study
+  illustrates how the latter can be used to summarise the information
+  from training sessions and use it in more advanced statistical
+  analyses.}
+
+\Address{
+  Hannah Frick\\
+  Department of Statistical Science\\
+  University College London\\
+  Gower Street\\
+  London, WC1E 6BT\\
+  United Kingdom\\
+  E-mail: \email{hannah.frick@gmail.com} \\
+  URL: \url{http://www.ucl.ac.uk/~ucakhfr/} \bigskip \\
+  %
+  Ioannis Kosmidis \\
+  Department of Statistics \\
+  University of Warwick \\
+  Gibbet Hill Road \\
+  Coventry, CV4 7AL \\
+  United Kingdom \\ \smallskip
+  E-mail: \email{ioannis.kosmidis@warwick.ac.uk} \\
+  URL: \url{http://www.ikosmidis.com}
+}
+
+%% Sweave/vignette information and metadata
+%% need no \usepackage{Sweave}
+\SweaveOpts{engine = R, eps = FALSE, keep.source = TRUE}
+%\VignetteIndexEntry{Infrastructure for Running, Cycling and Swimming Data}
+%\VignetteDepends{trackeR}
+%\VignetteKeywords{sports, tracking, W', running, cycling, swimming distribution profiles, R}
+%\VignettePackage{trackeR}
+
+<<preliminaries, echo=FALSE, results=hide>>=
+options(width = 70, prompt = "R> ", continue = "+  ", useFancyQuotes = FALSE)
+library("trackeR")
+library("ggplot2")
+data("runs", package = "trackeR")
+set.seed(403)
+cache <- FALSE
+@
+
+\begin{document}
+
+\message{ !name(trackeR.Rnw) !offset(3298) }
+\section{Concluding remarks} \label{sec:outro}
+
+% The \pkg{trackeR} package provides classes and methods for importing and
+% handling the irregularly sampled spatio-temporal data that arise from
+% GPS-enabled tracking devices in sports. Currently it supports TCX and db3
+% formats, but the package structure allows the easy inclusion of other
+% formats. After careful processing, the data are stored in session-based,
+% unit-aware, and operation-aware objects of class \class{trackeRdata}. Associated
+% methods handle conversion between units of measurement, calculation of relevant
+% summaries and the visualisation of tracking data. Time in zones, work capacity,
+% and distribution and concentration profiles can also be readily calculated and
+% used for further statistical analyses. An example of such analysis is presented
+% in Section~\ref{sec:casestudy}, where functional principal components analysis
+% is used to characterise the apparent variability between speed concentration
+% profiles.
+
+% Infrastructure for irregularly sampled spatio-temporal data in general is also
+% provided in the \pkg{trajectories} package \citep{trackeR:pkg:trajectories},
+% which is developed around the \class{STIDF} class of the \pkg{spacetime} package
+% \citep{trackeR:Pebesma:2012}. In order to provide users with access to an as
+% wide range of data-analytic methods as is possible, we aim to provide a sensible
+% coercion function from \class{trackeRdata} to \class{STIDF}. One of the
+% challenges we are facing is that the \class{STIDF} class does not
+% accommodate missing values in positional or temporal information, which is
+% commonly the case in data from GPS-enabled tracking devices (e.g., sequences of
+% missing values in the positional data because the GPS signal is temporarily
+% lost). Other packages that offer tools for spatio-temporal data include
+% \pkg{adehabtitatLT} \citep{trackeR:Calenge:2006}, \pkg{trip}
+% \citep{trackeR:pkg:trip} and \pkg{move} \citep{trackeR:pkg:move}. The main focus
+% of those packages is on animal tracking (e.g., estimation of habitat choices)
+% and they are not directly suitable for tracking the various aspects of athlete activity.
+
+% Areas for further development include the extension of the reading capabilities
+% to more file formats and the implementation of more analytic tools, such as
+% record power profiles \citep{trackeR:Pinot+Grappe:2011}. The case study in
+% Section~\ref{sec:casestudy} draws some links to functional data analysis which
+% is another area of further exploration for analytic tools for the package.
+
+%\newpage \clearpage
+\section*{Acknowledgements}
+
+We are thankful to Victoria Downie, Andy Hudson, Louis Passfield, Ben
+Rosenblatt, and Achim Zeileis for helpful feedback and discussions as well as
+providing the data that are used for the illustrations and examples in the package.
+
+\pagebreak
+\clearpage
+
+\bibliography{trackeR}
+
+
+%%check journal and publisher names according to \url{http://www.jstatsoft.org/style}
+
+%% Journals:
+%%     The American Statistician (not: American Statistician)
+%%     The Annals of Statistics (not: Annals of Statistics)
+%%     Journal of the Royal Statistical Society B (not: Journal of the Royal Statistical Society, Series B)
+
+%% Publishers:
+%%     Springer-Verlag (not: Springer)
+%%     John Wiley & Sons (not: Wiley, John Wiley & Sons Inc.)
+
+
+%\newpage
+\begin{appendix}
+
+\section[Replenishment of W']{Replenishment of $W'$}
+\label{sec:appendix}
+
+Assuming that power is constant, the solution of the differential equation
+describing the rate of replenishment in Equation~\ref{eq:recharge:rate} with respect
+to $W'(t)$ gives
+%
+\begin{equation}
+  \label{eq:recharge:2}
+  1 - \frac{W'(t)}{W'_0} = \exp \left( \frac{P- CP}{W'_0}  t + D / W'_0 \right)
+  \, .
+\end{equation}
+%
+Using Equation~\ref{eq:recharge:2} over an interval $[t_{i-1}, t_i)$ of constant
+power gives
+%
+\begin{equation*}
+  1 - \frac{W'(t_i)}{W'_0} = \exp \left( \frac{P_i - CP}{W'_0}  (t_i -
+    t_{i-1}) \right) \left( 1 - \frac{W'(t_{i-1})}{W'_0} \right) \, .
+\end{equation*}
+%
+Hence, $W'(t_i)$ can be expressed in terms of $W'(t_{i-1})$ as
+%
+\begin{equation*}
+   W'(t_i) = W'_0 - \left( W'_0 - W'(t_{i-1}) \right) \exp \left( \frac{P_i -
+      CP}{W'_0}  (t_i - t_{i-1}) \right) \, .
+\end{equation*}
+%
+
+
+%% , via the substitution rule for integrals in the
+%% step from Equation~\ref{eq:recharge:substitution1}
+%% to~\ref{eq:recharge:substitution2}, gives the following
+%% %
+%% \begin{align}
+%%   \int{ \frac{d}{dt} W'(t) \frac{1}{1 -  W'(t)/W'_0} } \, dt &= \int{ (CP
+%%     - P)} \, dt \label{eq:recharge:substitution1} \\
+%%   \int{ \frac{1}{1 -  W'(t)/W'_0} } \, d W'(t) & = \int{(CP - P)} \, dt \label{eq:recharge:substitution2}\\
+%%   \log \left( 1 - \frac{W'(t)}{W'_0} \right) (-W'_0) &= (CP- P)
+%%   t + D  \nonumber \\
+%%   1 - \frac{W'(t)}{W'_0} &= \exp \left( \frac{P- CP}{W'_0}  t + c \right)  \label{eq:recharge:2}
+%% \end{align}
+%% %
+%% with $c = D / W'_0$.
+%% Note that power is again assumed to be constant, as it is in the case of
+%% depletion of $W'$. Applying this to an interval $[t_{i-1}, t_i)$ and setting
+%% Equation~\ref{eq:recharge:2} for time points $t_{i-1}$ and $t_i$ in relation to
+%% each other allows expressing $W'(t_i)$ in terms of $W'(t_{i-1})$:
+%% %
+%% \begin{align*}
+%%   \frac{1 - \frac{W'(t_i)}{W'_0}}{1 - \frac{W'(t_{i-1})}{W'_0}} &= \frac{\exp
+%%     \left( \frac{P_i - CP}{W'_0}  t_i + c \right) }{\exp \left( \frac{P_i -
+%%         CP}{W'_0}  t_{i-1} + c \right) } \\
+%%   1 - \frac{W'(t_i)}{W'_0} &= \exp \left( \frac{P_i - CP}{W'_0}  (t_i -
+%%     t_{i-1}) \right) \left( 1 - \frac{W'(t_{i-1})}{W'_0} \right) \\
+%%   W'_0 - W'(t_i) &= \exp \left( \frac{P_i - CP}{W'_0}  (t_i -
+%%     t_{i-1}) \right) \left( W'_0 - W'(t_{i-1}) \right) \\
+%%   W'(t_i) &= W'_0 - \left( W'_0 - W'(t_{i-1}) \right) \exp \left( \frac{P_i -
+%%       CP}{W'_0}  (t_i - t_{i-1}) \right) \, .
+%% \end{align*}
+%% %
+
+
+\end{appendix}
+
+
+
+\message{ !name(trackeR.Rnw) !offset(3295) }
+
+\end{document}

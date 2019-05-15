@@ -1,5 +1,5 @@
 Package: trackeR
-Version: 1.5.1
+Version: 1.5.2
 Title: Infrastructure for Running, Cycling and Swimming Data from
         GPS-Enabled Tracking Devices
 Authors@R: c(person(given = "Ioannis", family = "Kosmidis",
@@ -23,10 +23,10 @@ RoxygenNote: 6.1.1
 Encoding: UTF-8
 LazyData: true
 NeedsCompilation: no
-Packaged: 2019-04-10 09:28:00 UTC; yiannis
+Packaged: 2019-05-15 10:36:39 UTC; yiannis
 Author: Ioannis Kosmidis [aut, cre] (<https://orcid.org/0000-0003-1556-0302>),
   Hannah Frick [aut] (<https://orcid.org/0000-0002-6049-5258>),
   Robin Hornak [aut]
 Maintainer: Ioannis Kosmidis <ioannis.kosmidis@warwick.ac.uk>
 Repository: CRAN
-Date/Publication: 2019-04-10 11:42:40 UTC
+Date/Publication: 2019-05-15 11:50:03 UTC
