@@ -21,13 +21,15 @@
 #' @note
 #'
 #' This work has been supported by the English Institute of Sport
-#' \url{http://www.eis2win.co.uk} and University College London (UCL),
-#' which jointly contributed to the grant that funded Hannah Frick's
-#' Post Doctoral Research Fellowship at UCL between 2014 and 2016 and
-#' a percentage of Ioannis Kosmidis' time. Ioannis Kosmidis has also
-#' been supported by the Alan Turing Institute under the EPSRC grant
-#' EP/N510129/1 (Turing award number TU/B/000082). The support of the
-#' aforementioned organisations is greatly acknowledged.
+#' (currently UK Sports Institute)
+#' \url{https://uksportsinstitute.co.uk} and University College London
+#' (UCL), which jointly contributed to the grant that funded Hannah
+#' Frick's Post Doctoral Research Fellowship at UCL between 2014 and
+#' 2016 and a percentage of Ioannis Kosmidis' time. Ioannis Kosmidis
+#' has also been supported by the Alan Turing Institute under the
+#' EPSRC grant EP/N510129/1 (Turing award number TU/B/000082). The
+#' support of the aforementioned organisations is greatly
+#' acknowledged.
 #'
 #' Hannah Frick maintained trackeR from its first release up and since
 #' version 1.0.0.
@@ -108,7 +110,7 @@ get_units <- function(object, ...) UseMethod("get_units")
 #' @param object The object of which the units of measurement are changed.
 #' @param variable A vector of variables whose units are to be changed.
 #' @param unit A vector with the units, corresponding to \code{variable}.
-#' @param sport A vector of sports (amongst \code{'cycling'},
+#' @param sport A vector of sports (among \code{'cycling'},
 #'     \code{'running'}, \code{'swimming'}) with each element
 #'     corresponding to \code{variable} and \code{unit}.
 #' @param ... Arguments to be passed to methods.

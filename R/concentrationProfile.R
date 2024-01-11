@@ -25,7 +25,7 @@
 #' list component
 #'
 #' \item \code{session_times}: the session start and end times
-#' correspoding to the columns of each list component
+#' corresponding to the columns of each list component
 #'
 #' \item \code{unit_reference_sport}: the sport where the units have
 #' been inherited from
@@ -124,6 +124,7 @@ plot.conProfile <- function(x,
     }
     ## duration unit; sport does not matter here as units have been uniformised already
     units <- get_units(x)
+    un <- collect_units(units)
     duration_unit <- units$unit[units$sport == "running" & units$variable == "duration"]
     ## fortify
     df <- fortify(x, melt = TRUE)
@@ -132,9 +133,14 @@ plot.conProfile <- function(x,
 
     ## make basic plot and facets
     lab_data <- function(series) {
-        thisunit <- units$unit[units$sport == "running" & units$variable == series]
+        el <- series == "cumulative_elevation_gain"
+        if (el) series <- "altitude"
+        thisunit <- un$unit[un$variable == series]
         prettyUnit <- prettifyUnits(thisunit)
-        paste0(series, " [", prettyUnit,"]")
+        if (el)
+            paste0("cumulative_elevation_gain", "\n[", prettyUnit,"]")
+        else
+            paste0(series, "\n[", prettyUnit,"]")
     }
     lab_data <- Vectorize(lab_data)
     if (multiple) {
@@ -300,8 +306,8 @@ get_sport.conProfile <- function(object,
 #' @rdname concentration_profile.distrProfile
 #'
 #' @inheritParams concentration_profile
-#' @param limits A named list of vectors of two numbers to specifiy
-#'     the lowe and upper limits for the variables in \code{what}. If
+#' @param limits A named list of vectors of two numbers to specify the
+#'     lower and upper limits for the variables in \code{what}. If
 #'     \code{NULL} (default) the limits for the variables in
 #'     \code{what} are inferred from \code{object}.
 #' @param parallel Logical. Should computation be carried out in

@@ -144,6 +144,21 @@ readTCX <- function(file,
     observations$time <- gsub("[\t\n]", "", observations$time)
     observations$time <- convertTCXTimes2POSIXct(observations$time, timezone = timezone)
 
+    is_cadence <- grepl("cadence", names(observations))
+    if (any(is_cadence)) {
+        if (is.na(sport)) {
+            observations[is_cadence] <- NULL
+        }
+        else {
+            if (sport == "running") {
+                names(observations)[is_cadence] <- "cadence_running"
+            }
+            if (sport == "swimming" | is.na(sport)) {
+                observations[is_cadence] <- NULL
+            }
+        }
+    }
+
     ## Add missing varibles
     missingVars <- namesToBeUsed[match(namesToBeUsed, names(observations), nomatch = 0) == 0]
     if (nrow(observations) > 0) {
@@ -176,7 +191,6 @@ readTCX <- function(file,
 
 }
 
-#' @inheritParams readX
 #' @export
 #' @rdname readX
 readGPX <- function(file,
@@ -332,7 +346,7 @@ readGPX <- function(file,
 
 #' @param table Character string indicating the name of the table with
 #'     the GPS data in the db3 container file.
-#' @inheritParams readX
+
 #' @export
 #' @rdname readX
 readDB3 <- function(file,
@@ -413,7 +427,7 @@ readDB3 <- function(file,
 }
 
 
-#' @inheritParams readX
+
 #' @details Reading Golden Cheetah's JSON files is experimental.
 #' @export
 #' @rdname readX

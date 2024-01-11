@@ -1,5 +1,5 @@
 Package: trackeR
-Version: 1.5.2
+Version: 1.6.0
 Title: Infrastructure for Running, Cycling and Swimming Data from
         GPS-Enabled Tracking Devices
 Authors@R: c(person(given = "Ioannis", family = "Kosmidis",
@@ -14,19 +14,20 @@ Description: Provides infrastructure for handling running, cycling and swimming 
 Depends: R (>= 3.1.0), zoo
 Imports: ggplot2, ggridges, xml2, RSQLite, jsonlite, raster, scam,
         foreach, fda, sp, leaflet, ggmap, gridExtra, gtable
-Suggests: testthat, knitr, rmarkdown, covr
+Suggests: spelling, testthat, knitr, rmarkdown, covr
 VignetteBuilder: knitr
 License: GPL-3
 URL: https://github.com/trackerproject/trackeR
 BugReports: https://github.com/trackerproject/trackeR/issues
-RoxygenNote: 6.1.1
+RoxygenNote: 7.2.3
 Encoding: UTF-8
 LazyData: true
+Language: en-GB
 NeedsCompilation: no
-Packaged: 2019-05-15 10:36:39 UTC; yiannis
+Packaged: 2024-01-11 16:31:42 UTC; yiannis
 Author: Ioannis Kosmidis [aut, cre] (<https://orcid.org/0000-0003-1556-0302>),
   Hannah Frick [aut] (<https://orcid.org/0000-0002-6049-5258>),
   Robin Hornak [aut]
 Maintainer: Ioannis Kosmidis <ioannis.kosmidis@warwick.ac.uk>
 Repository: CRAN
-Date/Publication: 2019-05-15 11:50:03 UTC
+Date/Publication: 2024-01-11 17:30:02 UTC
