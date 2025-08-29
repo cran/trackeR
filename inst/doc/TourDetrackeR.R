@@ -1,5 +1,5 @@
 ## ----vignette, eval = FALSE---------------------------------------------------
-#  vignette("trackeR", package = "trackeR")
+# vignette("trackeR", package = "trackeR")
 
 ## ----setup, include = FALSE---------------------------------------------------
 knitr::opts_chunk$set(
